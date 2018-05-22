@@ -8,6 +8,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * This is a small helper that will build a list of destination files
  *
+ * TODO filter the file name for illegal symbols that aren't allowed in the filepath
+ *
  * @author Leo Ertuna
  * @since 19.05.2018 00:02
  */
