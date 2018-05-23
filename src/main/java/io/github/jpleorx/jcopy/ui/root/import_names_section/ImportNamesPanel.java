@@ -1,8 +1,10 @@
 package io.github.jpleorx.jcopy.ui.root.import_names_section;
 
+import io.github.jpleorx.jcopy.core.Cache;
 import io.github.jpleorx.jcopy.helpers.TextFileParser;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +24,11 @@ public class ImportNamesPanel extends JPanel {
     private JTextArea namesTextArea;
     private JScrollPane namesScrollPane;
 
+    /**
+     * Constructor
+     */
     public ImportNamesPanel() {
+        // Initialize
         this.init();
     }
 
@@ -56,9 +62,24 @@ public class ImportNamesPanel extends JPanel {
     private class ImportButtonActionListener implements ActionListener {
         private final JFileChooser fileChooser = new JFileChooser();
 
+        /**
+         * Constructor
+         */
+        public ImportButtonActionListener() {
+            // Create new filter, so that we will allow only .txt files
+            FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Plain text files (.txt)", "txt");
+
+            // Set the filter to file chooser
+            fileChooser.setFileFilter(extensionFilter);
+        }
+
+        /**
+         * On click
+         * @param e action
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Open the filechooser and Wait till it returns
+            // Open the file chooser and Wait till it returns
             int returnValue = fileChooser.showOpenDialog(ImportNamesPanel.this);
 
             // If the user selected a file
@@ -70,10 +91,11 @@ public class ImportNamesPanel extends JPanel {
                 TextFileParser textFileParser = new TextFileParser(file);
                 textFileParser.read();
 
-                // Display its contents in the text are
+                // Display its contents in the text area
                 namesTextArea.setText(textFileParser.getText());
 
-                // TODO store the contents somewhere
+                // Store the contents in the cache
+                Cache.getInstance().setDestinationFilenames(textFileParser.getLines());
             }
 
             // If the user canceled the dialog
