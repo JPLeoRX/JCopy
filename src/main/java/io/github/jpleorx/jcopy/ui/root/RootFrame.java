@@ -1,6 +1,6 @@
 package io.github.jpleorx.jcopy.ui.root;
 
-import io.github.jpleorx.jcopy.ui.ProcedurePanel;
+import io.github.jpleorx.jcopy.ui.root.copying_procedure_section.ProcedurePanel;
 import io.github.jpleorx.jcopy.ui.root.import_names_section.ImportNamesPanel;
 import io.github.jpleorx.jcopy.ui.root.source_and_destination_section.SourceAndDestinationPanel;
 
@@ -29,7 +29,7 @@ public class RootFrame extends JFrame  {
         // Title, close operation, size, location
         this.setTitle("JCopy");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 800);
+        this.setSize(900, 600);
         this.setLocationRelativeTo(null);
 
         // Layout
