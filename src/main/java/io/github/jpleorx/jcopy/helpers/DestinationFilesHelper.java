@@ -8,8 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * This is a small helper that will build a list of destination files
  *
- * TODO filter the file name for illegal symbols that aren't allowed in the filepath
- *
  * @author Leo Ertuna
  * @since 19.05.2018 00:02
  */
@@ -42,7 +40,7 @@ public class DestinationFilesHelper {
             String folderPath = destinationFolder.getAbsolutePath();
 
             // Add file name and extension to the folder path - we will get filepath
-            String filePath = folderPath + "/" + name + "." + sourceFileExtension;
+            String filePath = folderPath + "/" + trimFilename(name) + "." + sourceFileExtension;
 
             // Create new file and add it to the list
             destinationFiles.add(new File(filePath));
@@ -54,6 +52,18 @@ public class DestinationFilesHelper {
      */
     public void build() {
         this.buildInternal();
+    }
+
+    /**
+     * Internal trimer of the filename, it removes all illegal characters from the name
+     * @param s filename
+     * @return trimed filename
+     */
+    private static String trimFilename(String s) {
+        return s.trim().
+                replace("/", "").replace("\\", "").replace("\"", "").
+                replace(":", "").replace("*", "").replace("?", "").
+                replace("<", "").replace(">", "").replace("|", "");
     }
 
     /**
