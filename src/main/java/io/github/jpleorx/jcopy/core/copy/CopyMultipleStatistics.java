@@ -1,9 +1,13 @@
-package io.github.jpleorx.jcopy.copy;
+package io.github.jpleorx.jcopy.core.copy;
+
+import io.github.jpleorx.jcopy.core.listeners.CopyMultipleStatisticsListener;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Stats of the multiple copying procedure
@@ -16,6 +20,8 @@ public class CopyMultipleStatistics {
     private Map<File, CopyOperation> operations;
     private Map<File, Boolean> started;
     private Map<File, Boolean> finished;
+
+    private List<CopyMultipleStatisticsListener> listeners;
 
     /**
      * Constructor
@@ -33,6 +39,9 @@ public class CopyMultipleStatistics {
         // Load the maps
         destinationFiles.parallelStream().forEach(file -> started.put(file, false));
         destinationFiles.parallelStream().forEach(file -> finished.put(file, false));
+
+        // Initialize listeners list
+        listeners = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -43,6 +52,7 @@ public class CopyMultipleStatistics {
     public void started(File destination, CopyOperation copyOperation) {
         started.put(destination, true);
         operations.put(destination, copyOperation);
+        callListeners();
     }
 
     /**
@@ -53,6 +63,30 @@ public class CopyMultipleStatistics {
     public void finished(File destination, CopyOperation copyOperation) {
         finished.put(destination, true);
         operations.put(destination, copyOperation);
+        callListeners();
+    }
+
+    /**
+     * Listeners call
+     */
+    private void callListeners() {
+        listeners.parallelStream().forEach(listener -> listener.action(this));
+    }
+
+    /**
+     * Add new listener
+     * @param listener listener
+     */
+    public void addListener(CopyMultipleStatisticsListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Getter
+     * @return number of listeners
+     */
+    public int getNumberOfListeners() {
+        return listeners.size();
     }
 
     /**
@@ -77,5 +111,13 @@ public class CopyMultipleStatistics {
      */
     public int getFinishedCount() {
         return finished.keySet().parallelStream().mapToInt(file -> finished.get(file) ? 1 : 0).sum();
+    }
+
+    /**
+     * Getter
+     * @return get list of finished files
+     */
+    public List<File> getFinishedFiles() {
+        return finished.keySet().parallelStream().filter(file -> finished.get(file)).collect(Collectors.toList());
     }
 }
