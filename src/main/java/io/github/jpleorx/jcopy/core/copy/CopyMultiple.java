@@ -1,4 +1,4 @@
-package io.github.jpleorx.jcopy.copy;
+package io.github.jpleorx.jcopy.core.copy;
 
 import java.io.File;
 import java.util.List;
@@ -13,6 +13,7 @@ public class CopyMultiple {
     private File source;
     private List<File> destinations;
     private CopyMultipleStatistics statistics;
+    private boolean stop;
 
     /**
      * Constructor
@@ -23,6 +24,7 @@ public class CopyMultiple {
         this.source = source;
         this.destinations = destinations;
         this.statistics = new CopyMultipleStatistics(destinations);
+        this.stop = false;
     }
 
     /**
@@ -31,18 +33,28 @@ public class CopyMultiple {
     public void copy() {
         // Run for each destination file through parallel stream
         destinations.parallelStream().forEach(destination -> {
-            // Create new copy operation
-            CopyOperation copyOperation = new CopyOperation(source, destination);
+            // If it wasn't stopped
+            if (!stop) {
+                // Create new copy operation
+                CopyOperation copyOperation = new CopyOperation(source, destination);
 
-            // Mark as started
-            statistics.started(destination, copyOperation);
+                // Mark as started
+                statistics.started(destination, copyOperation);
 
-            // Run it
-            copyOperation.copy();
+                // Run it
+                copyOperation.copy();
 
-            // Mark as finished
-            statistics.finished(destination, copyOperation);
+                // Mark as finished
+                statistics.finished(destination, copyOperation);
+            }
         });
+    }
+
+    /**
+     * External control method to stop copying
+     */
+    public void stop() {
+        stop = true;
     }
 
     /**
