@@ -1,4 +1,4 @@
-package io.github.jpleorx.jcopy.copy;
+package io.github.jpleorx.jcopy.core.copy;
 
 import java.io.*;
 import java.nio.channels.FileChannel;

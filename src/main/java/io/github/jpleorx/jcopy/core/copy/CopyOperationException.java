@@ -1,4 +1,4 @@
-package io.github.jpleorx.jcopy.copy;
+package io.github.jpleorx.jcopy.core.copy;
 
 /**
  * Runtime exception to be used in {@link CopyOperation}
