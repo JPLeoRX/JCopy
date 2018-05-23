@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
  * Copying will be started in a new SwingWorker to allow better flow of data between GUI and core
  *
  * @author Leo Ertuna
+ * @since 23.05.2018 23:25
  */
 public class ControlButtonsPanel extends JPanel {
     private JButton startButton;
